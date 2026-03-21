@@ -1,0 +1,22 @@
+Analyzing ml...                                                 
+
+warning - Unused import: 'package:supabase_flutter/supabase_flutter.dart' - lib\models\user_profile.dart:1:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\admin\analytics_screen.dart:34:38 - deprecated_member_use
+  error - Target of URI doesn't exist: '../providers/auth_provider.dart' - lib\screens\auth\role_dispatcher.dart:3:8 - uri_does_not_exist
+  error - Target of URI doesn't exist: '../screens/auth/login_screen.dart' - lib\screens\auth\role_dispatcher.dart:4:8 - uri_does_not_exist
+  error - Target of URI doesn't exist: '../screens/client/client_dashboard.dart' - lib\screens\auth\role_dispatcher.dart:5:8 - uri_does_not_exist
+  error - Target of URI doesn't exist: '../screens/lawyer/lawyer_dashboard.dart' - lib\screens\auth\role_dispatcher.dart:6:8 - uri_does_not_exist
+  error - Target of URI doesn't exist: '../screens/admin/admin_dashboard.dart' - lib\screens\auth\role_dispatcher.dart:7:8 - uri_does_not_exist
+  error - Undefined name 'authProvider' - lib\screens\auth\role_dispatcher.dart:14:28 - undefined_identifier
+  error - The name 'LoginScreen' isn't a class - lib\screens\auth\role_dispatcher.dart:17:20 - creation_with_non_type
+  error - The name 'LawyerDashboard' isn't a class - lib\screens\auth\role_dispatcher.dart:24:22 - creation_with_non_type
+  error - The name 'AdminDashboard' isn't a class - lib\screens\auth\role_dispatcher.dart:26:22 - creation_with_non_type
+  error - The name 'ClientDashboard' isn't a class - lib\screens\auth\role_dispatcher.dart:29:22 - creation_with_non_type
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\client\case_tracking_screen.dart:67:38 - deprecated_member_use
+  error - The class 'EdgeInsets' doesn't have a constant constructor 'bottom' - lib\screens\client\case_tracking_screen.dart:75:41 - const_with_undefined_constructor
+warning - The value of the local variable 'passwordHash' isn't used - lib\screens\lawyer\document_upload_screen.dart:29:13 - unused_local_variable
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\screens\lawyer\document_upload_screen.dart:74:15 - deprecated_member_use
+   info - The imported package 'crypto' isn't a dependency of the importing package - lib\utils\security_utils.dart:2:8 - depend_on_referenced_packages
+  error - The name 'MyApp' isn't a class - test\widget_test.dart:16:35 - creation_with_non_type
+
+18 issues found. (ran in 2.8s)

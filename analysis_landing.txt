@@ -1,0 +1,10 @@
+Analyzing ml...                                                 
+
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\admin\analytics_screen.dart:34:38 - deprecated_member_use
+warning - Unused import: 'client_signup_screen.dart' - lib\screens\auth\landing_screen.dart:4:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth\landing_screen.dart:92:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\client\case_tracking_screen.dart:67:38 - deprecated_member_use
+warning - Unused import: '../../utils/security_utils.dart' - lib\screens\lawyer\document_upload_screen.dart:4:8 - unused_import
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\screens\lawyer\document_upload_screen.dart:74:15 - deprecated_member_use
+
+6 issues found. (ran in 2.4s)

@@ -1,0 +1,9 @@
+Analyzing ml...                                                 
+
+warning - Unused import: 'package:supabase_flutter/supabase_flutter.dart' - lib\models\user_profile.dart:1:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\admin\analytics_screen.dart:34:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\client\case_tracking_screen.dart:67:38 - deprecated_member_use
+warning - The value of the local variable 'passwordHash' isn't used - lib\screens\lawyer\document_upload_screen.dart:29:13 - unused_local_variable
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\screens\lawyer\document_upload_screen.dart:74:15 - deprecated_member_use
+
+5 issues found. (ran in 4.3s)
