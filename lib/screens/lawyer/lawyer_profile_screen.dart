@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../services/supabase_service.dart';
+import '../../services/review_service.dart';
+import '../../models/review_model.dart';
 
 class LawyerProfileScreen extends ConsumerStatefulWidget {
   const LawyerProfileScreen({super.key});
@@ -14,6 +16,7 @@ class LawyerProfileScreen extends ConsumerStatefulWidget {
 class _LawyerProfileScreenState extends ConsumerState<LawyerProfileScreen> {
   Map<String, dynamic>? _profileData;
   bool _isLoading = true;
+  double _averageRating = 5.0;
 
   @override
   void initState() {
@@ -33,8 +36,11 @@ class _LawyerProfileScreenState extends ConsumerState<LawyerProfileScreen> {
           .eq('id', user.id)
           .single();
       
+      final reviews = await ReviewService.getLawyerReviews(user.id);
+      
       setState(() {
         _profileData = response;
+        _averageRating = ReviewService.calculateAverage(reviews);
         _isLoading = false;
       });
     } catch (e) {
@@ -86,7 +92,7 @@ class _LawyerProfileScreenState extends ConsumerState<LawyerProfileScreen> {
             _buildInfoTile(Icons.work, 'Specialization', prof?['specialization'] ?? 'N/A'),
             _buildInfoTile(Icons.school, 'Education', prof?['education'] ?? 'N/A'),
             _buildInfoTile(Icons.history, 'Experience', '${prof?['experience_years'] ?? 0} Years'),
-            _buildInfoTile(Icons.star, 'Rating', '${prof?['rating'] ?? 0.0} / 5.0'),
+            _buildInfoTile(Icons.star, 'Rating', '${_averageRating.toStringAsFixed(1)} / 5.0'),
           ]),
           const SizedBox(height: 24),
           _buildInfoSection('Account Info', [

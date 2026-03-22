@@ -4,6 +4,8 @@ import '../../utils/constants.dart';
 import '../../services/supabase_service.dart';
 import 'chat_screen.dart';
 import 'appointment_request_screen.dart';
+import 'lawyer_details_screen.dart';
+import '../../services/review_service.dart';
 
 class LawyerDirectoryScreen extends StatefulWidget {
   const LawyerDirectoryScreen({super.key});
@@ -18,6 +20,7 @@ class _LawyerDirectoryScreenState extends State<LawyerDirectoryScreen> {
   bool _isLoading = true;
   String _searchQuery = '';
   String _selectedSpecialization = 'All';
+  Map<String, double> _ratingsSummary = {};
   final List<String> _specializations = [
     'All',
     'Criminal Law',
@@ -37,13 +40,14 @@ class _LawyerDirectoryScreenState extends State<LawyerDirectoryScreen> {
   Future<void> _fetchLawyers() async {
     setState(() => _isLoading = true);
     try {
-      final response = await _supabase
-          .from('profiles')
-          .select('*, lawyer_profiles(*)')
-          .eq('role', 'lawyer');
+      final results = await Future.wait<dynamic>([
+        _supabase.from('profiles').select('*, lawyer_profiles(*)').eq('role', 'lawyer'),
+        ReviewService.getRatingsSummary(),
+      ]);
       
       setState(() {
-        _lawyers = List<Map<String, dynamic>>.from(response);
+        _lawyers = List<Map<String, dynamic>>.from(results[0] as List);
+        _ratingsSummary = results[1] as Map<String, double>;
         _isLoading = false;
       });
     } catch (e) {
@@ -72,51 +76,54 @@ class _LawyerDirectoryScreenState extends State<LawyerDirectoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Mercury Lawyers')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              onChanged: (val) => setState(() => _searchQuery = val),
-              decoration: InputDecoration(
-                hintText: 'Search by name or specialization...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                filled: true,
-                fillColor: AppConstants.primaryColor.withOpacity(0.1),
+      body: RefreshIndicator(
+        onRefresh: _fetchLawyers,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onChanged: (val) => setState(() => _searchQuery = val),
+                decoration: InputDecoration(
+                  hintText: 'Search by name or specialization...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  filled: true,
+                  fillColor: AppConstants.primaryColor.withOpacity(0.1),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: DropdownButtonFormField<String>(
-              value: _selectedSpecialization,
-              decoration: InputDecoration(
-                labelText: 'Filter by Specialization',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                prefixIcon: const Icon(Icons.filter_list),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: DropdownButtonFormField<String>(
+                value: _selectedSpecialization,
+                decoration: InputDecoration(
+                  labelText: 'Filter by Specialization',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  prefixIcon: const Icon(Icons.filter_list),
+                ),
+                items: _specializations.map((spec) => DropdownMenuItem(
+                  value: spec,
+                  child: Text(spec),
+                )).toList(),
+                onChanged: (val) {
+                  if (val != null) setState(() => _selectedSpecialization = val);
+                },
               ),
-              items: _specializations.map((spec) => DropdownMenuItem(
-                value: spec,
-                child: Text(spec),
-              )).toList(),
-              onChanged: (val) {
-                if (val != null) setState(() => _selectedSpecialization = val);
-              },
             ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _filteredLawyers.isEmpty
-                    ? const Center(child: Text('No lawyers found matches your search.'))
-                    : ListView.builder(
-                        itemCount: _filteredLawyers.length,
-                        itemBuilder: (context, index) => _buildLawyerCard(_filteredLawyers[index]),
-                      ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _filteredLawyers.isEmpty
+                      ? const Center(child: Text('No lawyers found matches your search.'))
+                      : ListView.builder(
+                          itemCount: _filteredLawyers.length,
+                          itemBuilder: (context, index) => _buildLawyerCard(_filteredLawyers[index]),
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -131,7 +138,8 @@ class _LawyerDirectoryScreenState extends State<LawyerDirectoryScreen> {
         : (rawProfs is Map ? rawProfs : null);
 
     final specialization = prof?['specialization'] ?? 'Legal Consultant';
-    final rating = prof?['rating']?.toString() ?? '5.0';
+    final avgRating = _ratingsSummary[lawyer['id']] ?? 5.0;
+    final rating = avgRating.toStringAsFixed(1);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -148,38 +156,16 @@ class _LawyerDirectoryScreenState extends State<LawyerDirectoryScreen> {
             const Icon(Icons.star, color: Colors.amber, size: 16),
             const SizedBox(width: 4),
             Text(rating, style: const TextStyle(fontSize: 12)),
-            const SizedBox(width: 8),
-            SizedBox(
-              height: 28,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AppointmentRequestScreen(lawyer: lawyer),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstants.secondaryColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Text('Book', style: TextStyle(fontSize: 10, color: Colors.white)),
-              ),
-            ),
           ],
         ),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ChatScreen(
-                otherUserId: lawyer['id'],
-                otherUserName: name,
-              ),
+              builder: (_) => LawyerDetailsScreen(lawyer: lawyer),
             ),
           );
+          _fetchLawyers();
         },
       ),
     );

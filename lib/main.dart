@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'services/supabase_service.dart';
 import 'services/notification_service.dart';
 import 'utils/constants.dart';
@@ -37,10 +38,17 @@ class MercuryLegalApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: AppConstants.primaryColor,
         scaffoldBackgroundColor: AppConstants.backgroundColor,
+        textTheme: GoogleFonts.outfitTextTheme(
+          Theme.of(context).textTheme,
+        ).apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: AppConstants.primaryColor,
+          seedColor: AppConstants.secondaryColor, // Indigo instead of Navy
           brightness: Brightness.dark,
           secondary: AppConstants.secondaryColor,
+          surface: AppConstants.primaryColor, // Ensure cards use the sleek elevated slate
         ),
         useMaterial3: true,
       ),

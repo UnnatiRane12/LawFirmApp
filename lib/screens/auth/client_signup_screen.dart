@@ -51,6 +51,19 @@ class _ClientSignupScreenState extends ConsumerState<ClientSignupScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            ColorFiltered(
+              colorFilter: const ColorFilter.matrix([
+                1, 0, 0, 0, 0,
+                0, 1, 0, 0, 0,
+                0, 0, 1, 0, 0,
+                1, 1, 1, 0, -1,
+              ]),
+              child: Image.asset(
+                AppConstants.logoAsset,
+                height: 80,
+              ),
+            ),
+            const SizedBox(height: 24),
             const Text(
               'Join Mercury Legal',
               style: AppConstants.headingStyle,

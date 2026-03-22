@@ -48,9 +48,9 @@ class TimelineItem {
 
   factory TimelineItem.fromMap(Map<String, dynamic> map) {
     return TimelineItem(
-      title: map['title'],
-      description: map['description'],
-      date: DateTime.parse(map['date']),
+      title: map['title'] ?? 'Update',
+      description: map['description'] ?? '',
+      date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
     );
   }
 
