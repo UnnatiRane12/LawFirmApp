@@ -32,7 +32,7 @@ The application streamlines case management, appointments, communication, and do
 - **Backend:** Supabase
 - **Database:** PostgreSQL
 - **Authentication:** Supabase Auth
-- 
+  
 
 ## 🎯 Objectives
 
